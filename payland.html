@@ -452,7 +452,7 @@
     // ТОП-Банки
     mono: {
       pkg: "com.ftband.mono",
-      intent: (raw) => `intent://qr/${raw}#Intent;scheme=monobank;package=com.ftband.mono;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.ftband.mono;end`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.ftband.mono;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.ftband.mono;end`
     },
     privat: {
       pkg: "ua.privatbank.ap24",
@@ -467,8 +467,8 @@
       intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.fuib.android.spot.online;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.fuib.android.spot.online;end`
     },
     sense: {
-      pkg: "com.alfabank.mobile.android",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.alfabank.mobile.android;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.alfabank.mobile.android;end`
+      pkg: "ua.alfabank.mobile.android",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.alfabank.mobile.android;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.alfabank.mobile.android;end`
     },
     oschad: {
       pkg: "ua.oschadbank.mbanking",
@@ -574,18 +574,23 @@
     });
   }
 
-  function triggerUniversalPay() {
+  async function triggerUniversalPay() {
     if (!rawBase64) return;
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    
-    if (isAndroid) {
-      window.location.href = `intent://bank.gov.ua/qr/${rawBase64}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
-      setTimeout(() => {
-        window.location.href = nbuUniversalUrl;
-      }, 1500);
-    } else {
-      window.location.href = nbuUniversalUrl;
+    const targetUrl = nbuUniversalUrl || ("https://bank.gov.ua/qr/" + rawBase64);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          url: targetUrl
+        });
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
     }
+
+    // Резервний перехід, якщо Web Share недоступний у браузері
+    window.location.href = targetUrl;
   }
 
   function openBankApp(bankKey) {
