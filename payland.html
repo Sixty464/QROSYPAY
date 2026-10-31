@@ -334,25 +334,39 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 </script>
 
 <script>
+  // Надійне декодування URL-Safe Base64 з підтримкою кирилиці (UTF-8)
   function decodeBase64UrlSafe(str) {
+    // Прибираємо можливі пробіли або URL-символи
+    str = decodeURIComponent(str).trim();
+    // Повертаємо стандартні символи Base64 замість URL-безпечних
     str = str.replace(/-/g, '+').replace(/_/g, '/');
-    while (str.length % 4) str += '=';
+    // Додаємо падінг = до кратності 4
+    while (str.length % 4) {
+      str += '=';
+    }
+    
+    // Декодуємо бінарні байти
     const binary = atob(str);
     const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    
+    // Перетворюємо байти UTF-8 у повноцінний український текст
     return new TextDecoder('utf-8').decode(bytes);
   }
 
   function copyVal(id) {
     const text = document.getElementById(id).textContent;
+    if (!text || text === "—") return;
     navigator.clipboard.writeText(text).then(() => {
       alert("Скопійовано: " + text);
     });
   }
 
   window.addEventListener("DOMContentLoaded", () => {
-    // Отримуємо рядок Base64 з URL (# або ?)
-    let raw = window.location.hash.substring(1);
+    // Читаємо хеш або query параметр
+    let raw = window.location.hash ? window.location.hash.substring(1) : "";
     if (!raw && window.location.search) {
       raw = window.location.search.substring(1);
     }
@@ -366,16 +380,18 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       const decoded = decodeBase64UrlSafe(raw);
       const lines = decoded.split("\n");
 
-      // Структура стандарту НБУ UCT
+      // Парсимо стандарт НБУ UCT
       const recipient = lines[5] || "—";
       const iban = (lines[6] || "—").replace(/\s+/g, "");
-      const amountRaw = lines[7] || "";
+      const amountRaw = (lines[7] || "").trim();
       const taxId = lines[8] || "—";
       const purpose = lines[11] || "—";
 
       let displayAmount = "Довільна";
       if (amountRaw.startsWith("UAH")) {
         displayAmount = amountRaw.replace("UAH", "") + " ₴";
+      } else if (amountRaw && !isNaN(parseFloat(amountRaw))) {
+        displayAmount = amountRaw + " ₴";
       }
 
       document.getElementById("disp-amount").textContent = displayAmount;
@@ -384,19 +400,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       document.getElementById("disp-taxid").textContent = taxId;
       document.getElementById("disp-purpose").textContent = purpose;
 
-      // Офіційне універсальне посилання НБУ
-      const nbuUniversalLink = `https://bank.gov.ua/qr/${raw}`;
+      // Офіційне посилання НБУ для банківських застосунків
+      const nbuUniversalLink = "https://bank.gov.ua/qr/" + raw;
       document.getElementById("btn-pay-link").href = nbuUniversalLink;
 
-      // Прямі deep-links для додатків банків
-      document.getElementById("link-mono").href = `monobank://qr/${raw}`;
+      // Deep Links під банки
+      document.getElementById("link-mono").href = "monobank://qr/" + raw;
       document.getElementById("link-privat").href = nbuUniversalLink;
       document.getElementById("link-abank").href = nbuUniversalLink;
       document.getElementById("link-pumb").href = nbuUniversalLink;
       document.getElementById("link-sense").href = nbuUniversalLink;
       document.getElementById("link-ukrgas").href = nbuUniversalLink;
 
-      // Малюємо QR-код для сканування з екрана ПК
+      // Генерація QR-коду
       const qr = qrcode(0, 'M');
       qr.addData(nbuUniversalLink);
       qr.make();
@@ -427,9 +443,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       container.innerHTML = "";
       container.appendChild(canvas);
 
-    } catch (e) {
-      console.error(e);
-      document.body.innerHTML = "<div style='text-align:center; padding:50px; color:#b91c1c;'><h3>Помилка розпізнавання платіжних реквізитів</h3></div>";
+    } catch (err) {
+      console.error("Помилка парсингу або генерації:", err);
+      document.body.innerHTML = `
+        <div style='text-align:center; padding:50px; color:#b91c1c;'>
+          <h3>Помилка розпізнавання платіжних реквізитів</h3>
+          <p style='font-size:12px; color:#64748b; margin-top:8px;'>Деталі: ${err.message || err}</p>
+        </div>
+      `;
     }
   });
 </script>
