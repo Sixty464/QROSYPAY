@@ -448,119 +448,94 @@
   let nbuUniversalUrl = "";
 
   // Повний конфіг усіх українських банків з підтримкою стандарту НБУ
-  const BANK_CONFIGS = {
-    // ТОП-Банки
+ const BANK_CONFIGS = {
     mono: {
       pkg: "com.ftband.mono",
-      intent: (raw) => `intent://qr/${raw}#Intent;scheme=monobank;package=com.ftband.mono;end`,
-      direct: (raw) => `monobank://qr/${raw}`
+      intent: (raw) => `intent://qr/${raw}#Intent;scheme=monobank;package=com.ftband.mono;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.ftband.mono;end`
     },
     privat: {
       pkg: "ua.privatbank.ap24",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.privatbank.ap24;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.privatbank.ap24;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.privatbank.ap24;end`
     },
     abank: {
       pkg: "ua.com.abank",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.abank;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.abank;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.com.abank;end`
     },
     pumb: {
-      pkg: "ua.pumb.pumbonline",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.pumb.pumbonline;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      pkg: "ua.pumb.digital",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.pumb.digital;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.pumb.digital;end`
     },
     sense: {
-      pkg: "com.alfabank.mobile.android",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.alfabank.mobile.android;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      pkg: "ua.sensebank.my",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.sensebank.my;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.sensebank.my;end`
     },
     oschad: {
       pkg: "ua.oschadbank.mbanking",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.oschadbank.mbanking;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.oschadbank.mbanking;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.oschadbank.mbanking;end`
     },
     raiffeisen: {
-      pkg: "ua.aval.raiffonline",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.aval.raiffonline;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      pkg: "ua.aval.smart",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.aval.smart;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.aval.smart;end`
     },
     ukrgas: {
       pkg: "com.ukrgasbank.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.ukrgasbank.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.ukrgasbank.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.ukrgasbank.mobile;end`
     },
     izibank: {
       pkg: "ua.com.tascombanksport",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.tascombanksport;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.tascombanksport;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.com.tascombanksport;end`
     },
     otp: {
       pkg: "ua.otpbank.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.otpbank.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.otpbank.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.otpbank.mobile;end`
     },
-
-    // Інші банки
     creditagricole: {
       pkg: "ua.creditagricole.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.creditagricole.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.creditagricole.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.creditagricole.mobile;end`
     },
     creditdnipro: {
       pkg: "ua.creditdnepr.freebank",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.creditdnepr.freebank;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.creditdnepr.freebank;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.creditdnepr.freebank;end`
     },
     tascom: {
       pkg: "ua.com.tascombank.tas2u",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.tascombank.tas2u;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.tascombank.tas2u;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.com.tascombank.tas2u;end`
     },
     ideabank: {
       pkg: "ua.ideabank.obank",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.ideabank.obank;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.ideabank.obank;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.ideabank.obank;end`
     },
     pravex: {
       pkg: "ua.pravex.online",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.pravex.online;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.pravex.online;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.pravex.online;end`
     },
     radabank: {
       pkg: "com.radabank.rb24",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.radabank.rb24;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.radabank.rb24;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.radabank.rb24;end`
     },
     mtb: {
       pkg: "ua.mtb.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.mtb.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.mtb.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.mtb.mobile;end`
     },
     piraeus: {
       pkg: "ua.piraeusbank.winbank",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.piraeusbank.winbank;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.piraeusbank.winbank;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.piraeusbank.winbank;end`
     },
     alliance: {
       pkg: "ua.alliancebank.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.alliancebank.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.alliancebank.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.alliancebank.mobile;end`
     },
     unex: {
       pkg: "ua.unexbank.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.unexbank.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.unexbank.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.unexbank.mobile;end`
     },
     grant: {
       pkg: "ua.grant.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.grant.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.grant.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.grant.mobile;end`
     },
     bst: {
       pkg: "ua.bst.mobile",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.bst.mobile;end`,
-      direct: (raw) => `https://bank.gov.ua/qr/${raw}`
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.bst.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.bst.mobile;end`
     }
   };
 
@@ -616,19 +591,13 @@
     if (!cfg) return;
 
     const isAndroid = /Android/i.test(navigator.userAgent);
-    const storeUrl = `https://play.google.com/store/apps/details?id=${cfg.pkg}`;
 
     if (isAndroid) {
-      const start = Date.now();
+      // Спрямовуємо Android напряму на додаток з вбудованим fallback_url для Google Play
       window.location.href = cfg.intent(rawBase64);
-
-      setTimeout(() => {
-        if (Date.now() - start < 2000 && !document.hidden) {
-          window.location.href = storeUrl;
-        }
-      }, 1200);
     } else {
-      window.location.href = cfg.direct(rawBase64);
+      // Для iOS або ПК
+      window.location.href = `https://bank.gov.ua/qr/${rawBase64}`;
     }
   }
 
