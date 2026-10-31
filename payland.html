@@ -574,23 +574,28 @@
     });
   }
 
-  async function triggerUniversalPay() {
+  // Головна універсальна кнопка
+  function triggerUniversalPay() {
     if (!rawBase64) return;
-    const targetUrl = nbuUniversalUrl || ("https://bank.gov.ua/qr/" + rawBase64);
+    // Відкриваємо чистий стандартний intent НБУ без блокуючих редиректів
+    window.location.href = `intent://bank.gov.ua/qr/${rawBase64}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
+  }
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          url: targetUrl
-        });
-        return;
-      } catch (err) {
-        if (err.name === 'AbortError') return;
-      }
+  // Відкриття обраного клієнтом банку
+  function openBankApp(bankKey) {
+    if (!rawBase64) return;
+    const cfg = BANK_CONFIGS[bankKey];
+    if (!cfg) return;
+
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (isAndroid) {
+      // Адресний запуск додатка за його точним package
+      window.location.href = `intent://bank.gov.ua/qr/${rawBase64}#Intent;scheme=https;package=${cfg.pkg};action=android.intent.action.VIEW;end`;
+    } else {
+      // Для iOS або ПК
+      window.location.href = `https://bank.gov.ua/qr/${rawBase64}`;
     }
-
-    // Резервний перехід, якщо Web Share недоступний у браузері
-    window.location.href = targetUrl;
   }
 
   function openBankApp(bankKey) {
