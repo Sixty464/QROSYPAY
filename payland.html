@@ -449,6 +449,7 @@
 
   // Повний конфіг усіх українських банків з підтримкою стандарту НБУ
  const BANK_CONFIGS = {
+    // ТОП-Банки
     mono: {
       pkg: "com.ftband.mono",
       intent: (raw) => `intent://qr/${raw}#Intent;scheme=monobank;package=com.ftband.mono;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.ftband.mono;end`
@@ -462,20 +463,20 @@
       intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.com.abank;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.com.abank;end`
     },
     pumb: {
-      pkg: "ua.pumb.digital",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.pumb.digital;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.pumb.digital;end`
+      pkg: "com.fuib.android.spot.online",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.fuib.android.spot.online;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.fuib.android.spot.online;end`
     },
     sense: {
-      pkg: "ua.sensebank.my",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.sensebank.my;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.sensebank.my;end`
+      pkg: "com.alfabank.mobile.android",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=com.alfabank.mobile.android;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.alfabank.mobile.android;end`
     },
     oschad: {
       pkg: "ua.oschadbank.mbanking",
       intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.oschadbank.mbanking;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.oschadbank.mbanking;end`
     },
     raiffeisen: {
-      pkg: "ua.aval.smart",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.aval.smart;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.aval.smart;end`
+      pkg: "ua.aval.raiffonline",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.aval.raiffonline;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.aval.raiffonline;end`
     },
     ukrgas: {
       pkg: "com.ukrgasbank.mobile",
@@ -489,6 +490,8 @@
       pkg: "ua.otpbank.mobile",
       intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.otpbank.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.otpbank.mobile;end`
     },
+
+    // Інші банки
     creditagricole: {
       pkg: "ua.creditagricole.mobile",
       intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.creditagricole.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.creditagricole.mobile;end`
@@ -518,8 +521,8 @@
       intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.mtb.mobile;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.mtb.mobile;end`
     },
     piraeus: {
-      pkg: "ua.piraeusbank.winbank",
-      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=ua.piraeusbank.winbank;S.browser_fallback_url=https://play.google.com/store/apps/details?id=ua.piraeusbank.winbank;end`
+      pkg: "gr.winbank.piraeusmobileua",
+      intent: (raw) => `intent://bank.gov.ua/qr/${raw}#Intent;scheme=https;package=gr.winbank.piraeusmobileua;S.browser_fallback_url=https://play.google.com/store/apps/details?id=gr.winbank.piraeusmobileua;end`
     },
     alliance: {
       pkg: "ua.alliancebank.mobile",
