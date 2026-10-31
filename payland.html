@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Оплата рахунку за IBAN</title>
+  
+  <!-- Мета-теги для красивого прев'ю у Viber / Telegram -->
+  <meta property="og:title" content="Оплата рахунку за IBAN (НБУ)">
+  <meta property="og:description" content="Швидка та безпечна оплата через мобільний додаток вашого банку">
+  <meta property="og:image" content="QROSYPAY_ICON.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="QROSYPAY_ICON.png">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 16px 12px;
+      line-height: 1.45;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 840px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+      margin: auto 0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        margin: 0;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Блок суми */
+    .amount-box {
+      background: #f1f5f9;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+    }
+    .amount-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .amount-val {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    /* Список реквізитів */
+    .requisites-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .req-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      gap: 8px;
+    }
+    .req-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .req-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .req-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-all;
+    }
+    .btn-copy {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+    .btn-copy:active {
+      background: #e2e8f0;
+    }
+
+    /* Кнопки оплати */
+    .btn-main-pay {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+      transition: background 0.15s, transform 0.08s;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .btn-main-pay:active {
+      transform: scale(0.98);
+      background: var(--primary-hover);
+    }
+
+    /* Банки */
+    .banks-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+      position: relative;
+    }
+    .banks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .bank-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .bank-btn:active {
+      background: #f1f5f9;
+    }
+    .bank-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* QR Картка */
+    .qr-card {
+      text-align: center;
+      justify-content: center;
+    }
+    .qr-box {
+      width: 100%;
+      max-width: 240px;
+      aspect-ratio: 1 / 1;
+      margin: 10px auto;
+      padding: 10px;
+      background: #fff;
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-box canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Ліва колонка: Деталі чека та вибір оплати -->
+  <div class="card">
+    <div class="amount-box">
+      <div class="amount-label">Сума до сплати:</div>
+      <div class="amount-val" id="disp-amount">0 ₴</div>
+    </div>
+
+    <div class="requisites-list">
+      <div class="req-item">
+        <div class="req-info">
+          <div class="req-label">Отримувач</div>
+          <div class="req-val" id="disp-recipient">—</div>
+        </div>
+        <button class="btn-copy" onclick="copyVal('disp-recipient')" title="Скопіювати">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        </button>
+      </div>
+
+      <div class="req-item">
+        <div class="req-info">
+          <div class="req-label">Рахунок IBAN</div>
+          <div class="req-val" id="disp-iban" style="font-family:monospace;">—</div>
+        </div>
+        <button class="btn-copy" onclick="copyVal('disp-iban')" title="Скопіювати">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        </button>
+      </div>
+
+      <div class="req-item">
+        <div class="req-info">
+          <div class="req-label">ЄДРПОУ / РНОКПП</div>
+          <div class="req-val" id="disp-taxid">—</div>
+        </div>
+        <button class="btn-copy" onclick="copyVal('disp-taxid')" title="Скопіювати">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        </button>
+      </div>
+
+      <div class="req-item">
+        <div class="req-info">
+          <div class="req-label">Призначення платежу</div>
+          <div class="req-val" id="disp-purpose">—</div>
+        </div>
+        <button class="btn-copy" onclick="copyVal('disp-purpose')" title="Скопіювати">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Головна кнопка виклику системного вікна банку -->
+    <a id="btn-pay-link" href="#" class="btn-main-pay">Оплатити в додатку банку</a>
+
+    <!-- Прямі переходи у популярні українські банки -->
+    <div class="banks-title">Або оберіть додаток:</div>
+    <div class="banks-grid">
+      <a id="link-mono" href="#" class="bank-btn">
+        <div class="bank-icon" style="background:#000;">M</div>
+        <span>monobank</span>
+      </a>
+      <a id="link-privat" href="#" class="bank-btn">
+        <div class="bank-icon" style="background:#70a800;">24</div>
+        <span>Приват24</span>
+      </a>
+      <a id="link-abank" href="#" class="bank-btn">
+        <div class="bank-icon" style="background:#009a49;">a</div>
+        <span>А-Банк</span>
+      </a>
+      <a id="link-pumb" href="#" class="bank-btn">
+        <div class="bank-icon" style="background:#be123c;">П</div>
+        <span>ПУМБ</span>
+      </a>
+      <a id="link-sense" href="#" class="bank-btn">
+        <div class="bank-icon" style="background:#0284c7;">S</div>
+        <span>Sense Bank</span>
+      </a>
+      <a id="link-ukrgas" href="#" class="bank-btn">
+        <div class="bank-icon" style="background:#16a34a;">U</div>
+        <span>Укргазбанк</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Права колонка: QR для оплати (зручно на ПК / для сканування іншим телефоном) -->
+  <div class="card qr-card">
+    <div style="font-weight:700; font-size:16px;">Скануйте QR-код</div>
+    <div style="font-size:12px; color:var(--text-muted);">Відкрийте камеру або сканер у додатку банку</div>
+    
+    <div class="qr-box" id="qr-container"></div>
+    
+    <div style="font-size:11px; color:#94a3b8;">
+      Офіційний стандарт платежів НБУ (UCT)
+    </div>
+  </div>
+</div>
+
+<!-- ВШИТА БІБЛІОТЕКА QR-CODE -->
+<script>
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())};return f};var a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16]];return{getRSBlocks:function(e,n){var o=t[4*(e-1)+n];if(!o)throw"bad rs block";return[{totalCount:o[1],dataCount:o[2]}]}}}();var b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e};var M=function(t){return{getMode:function(){return a},getLength:function(){return t.length},write:function(r){for(var e=0;e<t.length;e++)r.put(t.charCodeAt(e)-48,4)}}};var x=function(t){return{getMode:function(){return u},getLength:function(){return t.length},write:function(r){for(var e=0;e<t.length;e++)r.put(t.charCodeAt(e),6)}}};var m=function(r){var e=function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):r.push(224|n>>12,128|n>>6&63,128|63&n)}return r}(r);return{getMode:function(){return f},getLength:function(){return e.length},write:function(t){for(var r=0;r<e.length;r+=1)t.put(e[r],8)}}};return t}();
+</script>
+
+<script>
+  function decodeBase64UrlSafe(str) {
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4) str += '=';
+    const binary = atob(str);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+
+  function copyVal(id) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Скопійовано: " + text);
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    // Отримуємо рядок Base64 з URL (# або ?)
+    let raw = window.location.hash.substring(1);
+    if (!raw && window.location.search) {
+      raw = window.location.search.substring(1);
+    }
+
+    if (!raw) {
+      document.body.innerHTML = "<div style='text-align:center; padding:50px;'><h3>Посилання не містить платіжних даних</h3></div>";
+      return;
+    }
+
+    try {
+      const decoded = decodeBase64UrlSafe(raw);
+      const lines = decoded.split("\n");
+
+      // Структура стандарту НБУ UCT
+      const recipient = lines[5] || "—";
+      const iban = (lines[6] || "—").replace(/\s+/g, "");
+      const amountRaw = lines[7] || "";
+      const taxId = lines[8] || "—";
+      const purpose = lines[11] || "—";
+
+      let displayAmount = "Довільна";
+      if (amountRaw.startsWith("UAH")) {
+        displayAmount = amountRaw.replace("UAH", "") + " ₴";
+      }
+
+      document.getElementById("disp-amount").textContent = displayAmount;
+      document.getElementById("disp-recipient").textContent = recipient;
+      document.getElementById("disp-iban").textContent = iban;
+      document.getElementById("disp-taxid").textContent = taxId;
+      document.getElementById("disp-purpose").textContent = purpose;
+
+      // Офіційне універсальне посилання НБУ
+      const nbuUniversalLink = `https://bank.gov.ua/qr/${raw}`;
+      document.getElementById("btn-pay-link").href = nbuUniversalLink;
+
+      // Прямі deep-links для додатків банків
+      document.getElementById("link-mono").href = `monobank://qr/${raw}`;
+      document.getElementById("link-privat").href = nbuUniversalLink;
+      document.getElementById("link-abank").href = nbuUniversalLink;
+      document.getElementById("link-pumb").href = nbuUniversalLink;
+      document.getElementById("link-sense").href = nbuUniversalLink;
+      document.getElementById("link-ukrgas").href = nbuUniversalLink;
+
+      // Малюємо QR-код для сканування з екрана ПК
+      const qr = qrcode(0, 'M');
+      qr.addData(nbuUniversalLink);
+      qr.make();
+
+      const count = qr.getModuleCount();
+      const cell = 5;
+      const margin = 10;
+      const size = count * cell + margin * 2;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.fillStyle = "#0f172a";
+      for (let r = 0; r < count; r++) {
+        for (let c = 0; c < count; c++) {
+          if (qr.isDark(r, c)) {
+            ctx.fillRect(margin + c * cell, margin + r * cell, cell, cell);
+          }
+        }
+      }
+
+      const container = document.getElementById("qr-container");
+      container.innerHTML = "";
+      container.appendChild(canvas);
+
+    } catch (e) {
+      console.error(e);
+      document.body.innerHTML = "<div style='text-align:center; padding:50px; color:#b91c1c;'><h3>Помилка розпізнавання платіжних реквізитів</h3></div>";
+    }
+  });
+</script>
+
+</body>
+</html>
