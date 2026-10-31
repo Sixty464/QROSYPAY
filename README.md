@@ -1,0 +1,2 @@
+# QROSYPAY
+IBAN QR Pay UA
