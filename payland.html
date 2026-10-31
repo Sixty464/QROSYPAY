@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Оплата рахунку за IBAN</title>
   
-  <!-- Мета-теги для красивого прев'ю у Viber / Telegram -->
   <meta property="og:title" content="Оплата рахунку за IBAN (НБУ)">
   <meta property="og:description" content="Швидка та безпечна оплата через мобільний додаток вашого банку">
   <meta property="og:image" content="QROSYPAY_ICON.png">
@@ -72,7 +71,6 @@
       gap: 16px;
     }
 
-    /* Блок суми */
     .amount-box {
       background: #f1f5f9;
       border-radius: var(--radius-md);
@@ -93,7 +91,6 @@
       margin-top: 2px;
     }
 
-    /* Список реквізитів */
     .requisites-list {
       display: flex;
       flex-direction: column;
@@ -136,11 +133,8 @@
       justify-content: center;
       border-radius: 4px;
     }
-    .btn-copy:active {
-      background: #e2e8f0;
-    }
+    .btn-copy:active { background: #e2e8f0; }
 
-    /* Кнопки оплати */
     .btn-main-pay {
       width: 100%;
       background: var(--primary);
@@ -152,7 +146,6 @@
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(37,99,235,0.25);
-      transition: background 0.15s, transform 0.08s;
       text-align: center;
       text-decoration: none;
       display: block;
@@ -162,13 +155,11 @@
       background: var(--primary-hover);
     }
 
-    /* Банки */
     .banks-title {
       font-size: 12px;
       font-weight: 700;
       color: var(--text-muted);
       text-align: center;
-      position: relative;
     }
     .banks-grid {
       display: grid;
@@ -187,12 +178,8 @@
       font-weight: 600;
       color: var(--text);
       text-decoration: none;
-      cursor: pointer;
-      transition: background 0.15s;
     }
-    .bank-btn:active {
-      background: #f1f5f9;
-    }
+    .bank-btn:active { background: #f1f5f9; }
     .bank-icon {
       width: 20px;
       height: 20px;
@@ -206,7 +193,6 @@
       flex-shrink: 0;
     }
 
-    /* QR Картка */
     .qr-card {
       text-align: center;
       justify-content: center;
@@ -224,16 +210,18 @@
       align-items: center;
       justify-content: center;
     }
-    .qr-box canvas {
-      width: 100% !important;
-      height: 100% !important;
+    .qr-box img, .qr-box canvas {
+      max-width: 100% !important;
+      height: auto !important;
     }
   </style>
+
+  <!-- Надійна бібліотека QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
 <div class="container">
-  <!-- Ліва колонка: Деталі чека та вибір оплати -->
   <div class="card">
     <div class="amount-box">
       <div class="amount-label">Сума до сплати:</div>
@@ -282,10 +270,8 @@
       </div>
     </div>
 
-    <!-- Головна кнопка виклику системного вікна банку -->
     <a id="btn-pay-link" href="#" class="btn-main-pay">Оплатити в додатку банку</a>
 
-    <!-- Прямі переходи у популярні українські банки -->
     <div class="banks-title">Або оберіть додаток:</div>
     <div class="banks-grid">
       <a id="link-mono" href="#" class="bank-btn">
@@ -315,10 +301,9 @@
     </div>
   </div>
 
-  <!-- Права колонка: QR для оплати (зручно на ПК / для сканування іншим телефоном) -->
   <div class="card qr-card">
     <div style="font-weight:700; font-size:16px;">Скануйте QR-код</div>
-    <div style="font-size:12px; color:var(--text-muted);">Відкрийте камеру або сканер у додатку банку</div>
+    <div style="font-size:12px; color:var(--text-muted);">Камерою телефона або з банківського додатку</div>
     
     <div class="qr-box" id="qr-container"></div>
     
@@ -328,29 +313,17 @@
   </div>
 </div>
 
-<!-- ВШИТА БІБЛІОТЕКА QR-CODE -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-
 <script>
-  // Надійне декодування URL-Safe Base64 з підтримкою кирилиці (UTF-8)
   function decodeBase64UrlSafe(str) {
-    // Прибираємо можливі пробіли або URL-символи
     str = decodeURIComponent(str).trim();
-    // Повертаємо стандартні символи Base64 замість URL-безпечних
     str = str.replace(/-/g, '+').replace(/_/g, '/');
-    // Додаємо падінг = до кратності 4
-    while (str.length % 4) {
-      str += '=';
-    }
+    while (str.length % 4) str += '=';
     
-    // Декодуємо бінарні байти
     const binary = atob(str);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) {
       bytes[i] = binary.charCodeAt(i);
     }
-    
-    // Перетворюємо байти UTF-8 у повноцінний український текст
     return new TextDecoder('utf-8').decode(bytes);
   }
 
@@ -363,7 +336,6 @@
   }
 
   window.addEventListener("DOMContentLoaded", () => {
-    // Читаємо хеш або query параметр
     let raw = window.location.hash ? window.location.hash.substring(1) : "";
     if (!raw && window.location.search) {
       raw = window.location.search.substring(1);
@@ -378,7 +350,6 @@
       const decoded = decodeBase64UrlSafe(raw);
       const lines = decoded.split("\n");
 
-      // Парсимо стандарт НБУ UCT
       const recipient = lines[5] || "—";
       const iban = (lines[6] || "—").replace(/\s+/g, "");
       const amountRaw = (lines[7] || "").trim();
@@ -398,11 +369,9 @@
       document.getElementById("disp-taxid").textContent = taxId;
       document.getElementById("disp-purpose").textContent = purpose;
 
-      // Офіційне посилання НБУ для банківських застосунків
       const nbuUniversalLink = "https://bank.gov.ua/qr/" + raw;
       document.getElementById("btn-pay-link").href = nbuUniversalLink;
 
-      // Deep Links під банки
       document.getElementById("link-mono").href = "monobank://qr/" + raw;
       document.getElementById("link-privat").href = nbuUniversalLink;
       document.getElementById("link-abank").href = nbuUniversalLink;
@@ -410,39 +379,20 @@
       document.getElementById("link-sense").href = nbuUniversalLink;
       document.getElementById("link-ukrgas").href = nbuUniversalLink;
 
-      // Генерація QR-коду
-      const qr = qrcode(0, 'M');
-      qr.addData(nbuUniversalLink);
-      qr.make();
-
-      const count = qr.getModuleCount();
-      const cell = 5;
-      const margin = 10;
-      const size = count * cell + margin * 2;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, size, size);
-
-      ctx.fillStyle = "#0f172a";
-      for (let r = 0; r < count; r++) {
-        for (let c = 0; c < count; c++) {
-          if (qr.isDark(r, c)) {
-            ctx.fillRect(margin + c * cell, margin + r * cell, cell, cell);
-          }
-        }
-      }
-
+      // Створення QR коду
       const container = document.getElementById("qr-container");
       container.innerHTML = "";
-      container.appendChild(canvas);
+      new QRCode(container, {
+        text: nbuUniversalLink,
+        width: 220,
+        height: 220,
+        colorDark: "#0f172a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
 
     } catch (err) {
-      console.error("Помилка парсингу або генерації:", err);
+      console.error("Помилка парсингу:", err);
       document.body.innerHTML = `
         <div style='text-align:center; padding:50px; color:#b91c1c;'>
           <h3>Помилка розпізнавання платіжних реквізитів</h3>
